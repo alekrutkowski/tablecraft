@@ -1,0 +1,122 @@
+/* Tablecraft data explorer. The host provides Bootstrap and app.css. */
+.analysis-dialog {
+  width: min(1220px, calc(100vw - 32px));
+  height: min(92dvh, 980px);
+  max-height: min(92dvh, 980px);
+  color: var(--ink);
+}
+.analysis-dialog .dialog-heading { flex-shrink: 0; padding-bottom: 16px; }
+.analysis-eyebrow {
+  color: var(--accent); font-size: 10px; font-weight: 750;
+  letter-spacing: .12em; display: block; margin-bottom: 6px;
+}
+.analysis-workspace { display: grid; grid-template-columns: 270px minmax(0, 1fr); min-height: 0; flex: 1; overflow: hidden; border-top: 1px solid var(--line); }
+.analysis-controls { display: flex; flex-direction: column; gap: 8px; overflow-y: auto; padding: 18px; border-right: 1px solid var(--line); background: var(--surface-subtle); }
+.analysis-controls > label, .analysis-controls label[for], .analysis-table-heading > label {
+  font-size: 11px; font-weight: 650; color: var(--soft-ink); margin: 4px 0 0;
+}
+.analysis-controls .form-select, .analysis-controls .form-control {
+  min-height: 34px; padding: 6px 9px; color: var(--ink); background-color: var(--surface);
+  border: 1px solid var(--line-strong); border-radius: 7px; font-size: 12px; width: 100%;
+}
+.analysis-controls input[type=checkbox], .analysis-controls input[type=radio] { accent-color: var(--accent); flex: 0 0 auto; }
+.analysis-controls .form-select:focus, .analysis-controls .form-control:focus {
+  border-color: var(--accent); outline: 2px solid var(--accent-soft); outline-offset: 1px;
+}
+.analysis-table-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.analysis-muted { font-size: 10px; color: var(--muted); font-weight: 400; }
+.analysis-table-options, .analysis-column-options { max-height: 156px; min-height: 37px; overflow-y: auto; border: 1px solid var(--line); background: var(--surface); border-radius: 7px; }
+.analysis-option { display: flex; align-items: flex-start; gap: 7px; padding: 7px 8px; font-size: 11px; cursor: pointer; border-bottom: 1px solid var(--line); min-width: 0; }
+.analysis-option:last-child { border-bottom: 0; }
+.analysis-option:hover { background: var(--surface-hover); }
+.analysis-option:has(input:checked) { background: var(--accent-soft); }
+.analysis-option input { margin-top: 3px; }
+.analysis-option-label { min-width: 0; flex: 1; }
+.analysis-option-label code { display: block; font-family: var(--mono); overflow-wrap: anywhere; font-size: 11px; }
+.analysis-option-label small { display: block; font-size: 10px; color: var(--muted); margin-top: 2px; }
+.analysis-column-actions { display: flex; justify-content: space-between; margin: 6px 0; }
+.analysis-column-actions button { font-size: 10px; }
+#analysis-column-control > label { display: block; margin-bottom: 6px; }
+.analysis-empty-choice { padding: 12px 9px; font-size: 11px; color: var(--muted); }
+.analysis-field-help { margin: 0; font-size: 11px; line-height: 1.5; color: var(--muted); }
+.analysis-help { display: flex; flex-wrap: wrap; gap: 9px; min-height: 16px; font-size: 10px; }
+.analysis-help a { color: var(--accent); }
+.analysis-limits { display: flex; align-items: center; gap: 9px; margin-top: 5px; }
+.analysis-limits label { flex: 1; margin: 0 !important; }
+.analysis-limits input[type=number] { width: 70px; }
+.analysis-check { display: flex; gap: 7px; align-items: flex-start; font-size: 11px; color: var(--soft-ink); line-height: 1.5; }
+.analysis-check input { margin-top: 3px; }
+.analysis-run { margin-top: 8px; min-height: 36px; justify-content: center; }
+.analysis-main { min-height: 0; min-width: 0; display: flex; flex-direction: column; background: var(--surface); }
+.analysis-tabs { display: flex; align-items: center; flex-shrink: 0; padding: 0 18px; min-height: 45px; gap: 4px; }
+.analysis-tabs .tab-button { border: 0; background: transparent; color: var(--muted); font-size: 12px; font-weight: 550; padding: 13px 12px; border-bottom: 2px solid transparent; }
+.analysis-tabs .tab-button[aria-selected=true] { color: var(--accent); border-bottom-color: var(--accent); }
+.analysis-tabs .tab-button:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
+.analysis-tab-actions { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+.analysis-tab-actions .btn { font-size: 11px; }
+.analysis-panel { overflow: auto; min-height: 0; flex: 1; padding: 18px; }
+.analysis-panel[hidden] { display: none; }
+.analysis-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 340px; padding: 32px; text-align: center; color: var(--muted); }
+.analysis-empty svg, .analysis-empty-icon { color: var(--accent); font-size: 30px; margin-bottom: 12px; }
+.analysis-empty h3 { font-size: 18px; color: var(--ink); margin: 0 0 8px; }
+.analysis-empty p { font-size: 12px; max-width: 390px; line-height: 1.7; }
+.analysis-render-note { font-size: 11px; line-height: 1.6; color: var(--muted); margin-bottom: 13px; }
+.analysis-table-container { max-height: 400px; overflow: auto; border: 1px solid var(--line); border-radius: 8px; margin-bottom: 16px; }
+.analysis-table-container .data-table th { z-index: 1; background: var(--surface-subtle); }
+.analysis-table-container .data-table th, .analysis-table-container .data-table td { padding: 9px 12px; }
+.analysis-table-container .data-table th { text-align: left; }
+.analysis-plots { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.analysis-plot { margin: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #fff; }
+.analysis-plot canvas, .analysis-plot img { display: block; width: 100%; max-width: 100%; height: auto; }
+.analysis-plot figcaption { color: #53616e; font-size: 10px; padding: 8px 12px; background: #f8fafb; }
+.analysis-warnings { border-left: 3px solid var(--orange, #b97728); padding: 9px 12px; margin-bottom: 13px; border-radius: 0 5px 5px 0; background: var(--surface-subtle); font-size: 11px; line-height: 1.6; color: var(--soft-ink); }
+.analysis-warnings p { margin: 0 0 4px; }
+.analysis-warnings p:last-child { margin: 0; }
+.analysis-console { font: 11px/1.6 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; color: var(--soft-ink); padding: 12px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface-subtle); }
+.analysis-error-box { padding: 20px; background: var(--surface-subtle); border: 1px solid var(--line); border-radius: 9px; }
+.analysis-error-box h3 { margin: 0 0 10px; font-size: 15px; color: var(--red, #b43e3b); }
+.analysis-error-box pre { margin: 0 0 15px; font: 11px/1.6 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); }
+.analysis-error-box p { font-size: 11px; color: var(--muted); }
+.analysis-error-box a { font-size: 12px; color: var(--accent); }
+#analysis-code { display: block; width: 100%; min-height: 500px; height: 100%; resize: vertical; border: 1px solid var(--line); border-radius: 7px; background: var(--surface-subtle); padding: 14px; color: var(--ink); font: 11px/1.65 var(--mono); tab-size: 2; white-space: pre; }
+.analysis-code-note { color: var(--muted); font-size: 11px; line-height: 1.5; margin: 0 0 12px; }
+.analysis-footer { flex-shrink: 0; min-height: 48px; gap: 15px; }
+#analysis-status { flex: 0 0 auto; margin: 0; padding: 9px 18px; min-height: 35px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 11px; line-height: 1.5; }
+#analysis-status.analysis-status-error { color: var(--red, #b43e3b); }
+.analysis-footer .analysis-privacy { font-size: 10px; color: var(--muted); white-space: nowrap; }
+@media (max-width: 800px) {
+  .analysis-dialog { width: calc(100vw - 16px); max-height: 95dvh; }
+  .analysis-dialog .dialog-heading { padding: 18px; }
+  .analysis-dialog .dialog-heading h2 { font-size: 21px; }
+  .analysis-workspace { grid-template-columns: 215px minmax(0, 1fr); }
+  .analysis-controls { padding: 12px; }
+  .analysis-panel { padding: 12px; }
+  .analysis-tabs { padding: 0 7px; }
+  .analysis-tabs .tab-button { padding: 12px 8px; }
+  .analysis-tab-actions { gap: 2px; }
+  .analysis-tab-actions .btn { padding: 5px 7px; }
+  .analysis-footer .analysis-privacy { display: none; }
+}
+@media (max-width: 600px) {
+  .analysis-workspace { display: flex; flex-direction: column; overflow-y: auto; }
+  .analysis-controls { overflow: visible; flex-shrink: 0; border-right: 0; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 12px; }
+  .analysis-controls > *, #analysis-column-control { grid-column: 1 / -1; }
+  .analysis-table-options, .analysis-column-options { max-height: 110px; }
+  .analysis-main { min-height: 400px; flex-shrink: 0; }
+  .analysis-panel { min-height: 300px; overflow: visible; }
+  .analysis-empty { min-height: 260px; padding: 20px; }
+  .analysis-table-container { max-height: 330px; }
+  #analysis-code { min-height: 390px; max-height: 600px; }
+}
+
+.analysis-main-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-shrink: 0; border-bottom: 1px solid var(--line); }
+.analysis-main-toolbar > a { font-size: 11px; margin-right: 18px; white-space: nowrap; }
+.analysis-code-toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.analysis-code-toolbar > span { flex: 1; font-size: 11px; color: var(--muted); }
+.analysis-code-toolbar .btn { font-size: 11px; }
+.analysis-table-container caption { caption-side: top; color: var(--muted); font-size: 11px; padding: 10px 12px; }
+.analysis-warnings summary { cursor: pointer; font-weight: 600; }
+.analysis-warnings summary + p { margin-top: 5px; }
+
+.analysis-error-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin: .75rem 0; }
+.analysis-copy-buffer { position: fixed; left: -9999px; top: 0; width: 1px; height: 1px; opacity: 0; }

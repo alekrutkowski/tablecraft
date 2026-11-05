@@ -1,0 +1,7 @@
+sensor	minute	temperature
+A	0	12.5
+A	10	NA
+A	20	13.1
+B	0	21.4
+B	10	20.9
+B	20	NA

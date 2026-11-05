@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="Build, inspect and run data.table pipelines in your browser. A visual R wizard with live results, file imports and editable code.">
+  <meta name="theme-color" content="#137c6d">
+  <title>Tablecraft | Visual data.table studio</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./vendor/bootstrap.min.css">
+  <link rel="stylesheet" href="./vendor/codemirror.css">
+  <link rel="stylesheet" href="./vendor/show-hint.css">
+  <link rel="stylesheet" href="./css/app.css">
+  <link rel="stylesheet" href="./css/analysis.css">
+  <script>try { document.documentElement.dataset.bsTheme = localStorage.getItem('tablecraft.theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (_) {}</script>
+  <script defer src="./vendor/codemirror.js"></script>
+  <script defer src="./vendor/r.js"></script>
+  <script defer src="./vendor/matchbrackets.js"></script>
+  <script defer src="./vendor/closebrackets.js"></script>
+  <script defer src="./vendor/show-hint.js"></script>
+  <script type="module" src="./js/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#workspace">Skip to workspace</a>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Tablecraft home"><img src="./assets/favicon.svg" width="32" height="32" alt=""><span>tablecraft<span class="brand-dot">.</span></span></a>
+    <span class="app-label">A data.table studio</span>
+    <div class="topbar-actions">
+      <span id="save-status" class="save-status" role="status" title="Code and imported files are saved locally for recovery">Preparing recovery…</span>
+      <button class="btn btn-quiet" data-action="help" title="Guide and keyboard shortcuts"><span data-icon="help"></span><span class="hide-small">Guide</span></button>
+      <button id="theme-button" class="btn btn-icon" data-action="theme" aria-label="Switch to dark theme"><span data-icon="moon"></span></button>
+      <span class="toolbar-divider"></span>
+      <button class="btn btn-quiet" data-action="open-recipe" title="Open a saved recipe"><span data-icon="folder"></span><span class="hide-small">Open</span></button>
+      <button class="btn btn-secondary" data-action="save-recipe"><span data-icon="save"></span><span>Save recipe</span></button>
+      <button id="restart-app-button" class="btn btn-quiet" data-action="restart-app" title="Clear the saved workspace and start over; confirmation required"><span data-icon="refresh"></span><span>Restart app</span></button>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Data and pipeline">
+      <div class="sidebar-section source-section">
+        <div class="section-label">DATA SOURCE <button class="link-button" data-action="source">Change <span data-icon="chevron-down"></span></button></div>
+        <button id="source-card" class="source-card" data-action="source" aria-label="Choose data source">
+          <span class="source-icon" data-icon="database"></span>
+          <span class="source-info"><strong id="source-name">Sales orders</strong><small id="source-dimensions">240 rows · 8 columns</small></span>
+          <span data-icon="chevron-right"></span>
+        </button>
+        <button class="upload-link" data-action="upload"><span data-icon="upload"></span> Import files <span class="file-hint">CSV, TSV, Excel…</span></button>
+      </div>
+      <div class="sidebar-section tables-section">
+        <div class="section-label">AVAILABLE TABLES <span id="table-name-count" class="count-badge">0</span><button class="link-button" data-action="manage-tables">Manage</button></div>
+        <input id="table-search" class="table-search" type="search" placeholder="Find a table…" aria-label="Find available tables">
+        <div id="table-name-list" class="table-name-list"></div>
+        <p class="tiny-note">Click a name to insert it in the focused field.</p>
+      </div>
+      <div class="sidebar-section pipeline-section">
+        <div class="section-label">PIPELINE <span id="step-count" class="count-badge">4</span><div class="history-buttons"><button id="undo-button" class="btn btn-icon btn-xs" data-action="undo" title="Undo (Ctrl+Z outside the editor)" aria-label="Undo pipeline change"><span data-icon="undo"></span></button><button id="redo-button" class="btn btn-icon btn-xs" data-action="redo" title="Redo" aria-label="Redo pipeline change"><span data-icon="redo"></span></button></div></div>
+        <div id="pipeline-list" class="pipeline-list" aria-label="Transformation steps"></div>
+        <button id="add-step-button" class="add-step-button" data-action="add"><span data-icon="plus"></span> Add a step <kbd>A</kbd></button>
+        <p id="pipeline-hint" class="sidebar-hint">Each step feeds the next with <code>%&gt;%</code>.</p>
+      </div>
+      <div class="sidebar-section columns-section">
+        <button class="section-label section-toggle" data-action="toggle-columns" aria-expanded="true">AVAILABLE COLUMNS <span id="column-count" class="count-badge">8</span><span data-icon="chevron-down"></span></button>
+        <div id="schema-scope" class="tiny-note">Input to selected step</div>
+        <div id="column-list" class="column-list"></div>
+      </div>
+      <div class="sidebar-bottom">
+        <button class="helper-link" data-action="helpers"><span class="function-symbol">ƒ</span><span>Function reference<small>Discover data.table helpers</small></span><span data-icon="arrow-up-right"></span></button>
+        <div class="engine-status" role="status"><span id="engine-dot" class="status-dot starting"></span><span id="engine-status">Starting R…</span><button id="restart-button" class="link-button" data-action="restart" title="Restart R and keep the saved workspace and files">Restart R</button></div>
+      </div>
+    </aside>
+
+    <main id="workspace" class="workspace">
+      <div class="workspace-heading">
+        <div><div class="eyebrow">YOUR WORKSPACE</div><h1>From data to insight<span>.</span></h1><p>Build a chain. Refine the code. See what changes.</p></div>
+        <div class="workspace-actions"><button class="btn btn-secondary" data-action="analysis"><span data-icon="sliders"></span>Explore data</button><label class="switch-label" title="Run after each edit. Turn off for large tables."><input id="auto-run" type="checkbox" role="switch" checked><span class="switch-track"></span><span>Live preview</span></label><button id="run-button" class="btn btn-primary" data-action="run"><span data-icon="play"></span><span>Run</span><kbd>Ctrl ↵</kbd></button><button id="stop-button" class="btn btn-danger" data-action="stop" hidden><span data-icon="stop"></span>Stop</button></div>
+      </div>
+      <div id="runtime-notice" class="runtime-notice" role="status"><span class="spinner"></span><div><strong>Preparing your R workspace</strong><span id="loading-message">Loading webR and data.table. The first visit takes a little longer.</span></div><span class="runtime-tag">webR</span></div>
+      <div id="text-mode-banner" class="mode-banner" hidden><span data-icon="code"></span><div><strong>Text mode</strong><span>Your R code is running as written. Return to Visual to synchronize the steps.</span></div><button class="btn btn-secondary btn-sm" data-action="visual-mode">Sync to Visual</button></div>
+
+      <div class="workbench">
+        <section id="config-panel" class="panel config-panel" aria-label="Step settings">
+          <div class="panel-heading"><div class="panel-title"><span data-icon="sliders"></span><h2>Step settings</h2></div><span id="step-position" class="muted">Step 3 of 4</span></div>
+          <div id="step-config" class="step-config"></div>
+        </section>
+        <section class="panel code-panel" aria-label="Editable R code">
+          <div class="panel-heading"><div class="panel-title"><span data-icon="code"></span><h2>R code</h2><span id="code-mode-badge" class="mini-badge">Synced</span><div class="mode-switch" role="group" aria-label="Editor mode"><button id="visual-mode-button" class="active" data-action="visual-mode" aria-pressed="true">Visual</button><button id="text-mode-button" data-action="text-mode" aria-pressed="false">Text</button></div></div><div class="panel-tools"><button id="restore-text-button" class="btn btn-quiet btn-sm" data-action="restore-text" hidden title="Restore your last manually edited code">Text draft</button><button class="btn btn-icon btn-sm" data-action="download-r" title="Download R script" aria-label="Download R script"><span data-icon="download"></span></button><button id="copy-code-button" class="btn btn-secondary btn-sm" data-action="copy-code"><span data-icon="copy"></span>Copy</button><button class="btn btn-icon btn-sm" data-action="expand-code" title="Expand code editor" aria-label="Expand code editor"><span data-icon="expand"></span></button></div></div>
+          <div class="editor-toolbar"><label class="check-label"><input id="intellisense-toggle" type="checkbox" checked> Code hints</label><button id="comments-toggle" class="link-button" data-action="toggle-comments" aria-pressed="true" title="Hide comments and omit them from R output">Comments: on</button><button class="link-button" data-action="format-code">Format R (88 columns)</button><button id="function-help-button" class="link-button" data-action="function-help" title="Help for the function at the cursor (F1)">Function help <kbd>F1</kbd></button></div>
+          <div class="editor-container"><textarea id="r-editor" spellcheck="false" aria-label="R code editor" autocapitalize="off" autocomplete="off"></textarea></div>
+          <div class="code-footer"><button id="syntax-status" class="syntax-status" data-action="show-diagnostics"><span class="status-dot starting"></span><span>Checking syntax…</span></button><span><span id="line-count">0</span> lines <span class="dot-separator">·</span> <kbd>Ctrl Space</kbd> to complete <span class="dot-separator">·</span> <kbd>F1</kbd> help</span></div>
+          <div id="function-context" class="function-context" hidden></div>
+        </section>
+      </div>
+
+      <section class="panel result-panel" aria-label="Result preview">
+        <div class="panel-heading result-heading"><div class="panel-title"><span data-icon="table"></span><h2>Result preview</h2><span id="result-state" class="mini-badge">Waiting for R</span></div><div class="panel-tools"><button id="export-csv-button" class="btn btn-quiet btn-sm" data-action="export-csv" disabled><span data-icon="download"></span>Export CSV</button></div></div>
+        <div id="diagnostics" class="diagnostics" role="status" hidden></div>
+        <div id="preview-stale" class="stale-notice" hidden><span data-icon="clock"></span><span>Code has changed. Run the pipeline to refresh this result.</span></div>
+        <div id="table-container" class="table-container"><div class="preview-empty"><div class="empty-table-icon" data-icon="table"></div><h3>Your result will appear here</h3><p>The R engine is starting. You can already explore and edit the pipeline.</p><div class="skeleton-table"><span></span><span></span><span></span><span></span></div></div></div>
+        <div class="result-footer"><div id="result-metrics"><span class="status-dot"></span><span>Ready when you are</span></div><div class="pagination-tools"><label for="page-size" class="muted">Rows</label><select id="page-size" aria-label="Rows per page"><option value="50">50</option><option value="100" selected>100</option><option value="200">200</option><option value="500">500</option></select><span id="page-info">0 of 0</span><button id="previous-page" class="btn btn-icon btn-sm" data-action="prev-page" disabled aria-label="Previous page"><span data-icon="chevron-left"></span></button><button id="next-page" class="btn btn-icon btn-sm" data-action="next-page" disabled aria-label="Next page"><span data-icon="chevron-right"></span></button></div></div>
+      </section>
+      <div class="workspace-footer"><span>R + data.table + magrittr. All in your browser.</span><button class="link-button" data-action="helpers">Explore the function reference <span data-icon="arrow-up-right"></span></button></div>
+    </main>
+  </div>
+
+  <dialog id="operation-dialog" class="app-dialog operation-dialog" aria-labelledby="operation-title"><div class="dialog-heading"><div><div class="eyebrow">BUILD YOUR PIPELINE</div><h2 id="operation-title">What would you like to do?</h2><p>Choose a transformation. Fine-tune it in step settings.</p></div><button class="btn btn-icon" data-close aria-label="Close operation picker"><span data-icon="x"></span></button></div><div class="search-box"><span data-icon="search"></span><input id="operation-search" type="search" placeholder="Search operations, functions, or ideas…" aria-label="Search operations"><kbd>Esc</kbd></div><div id="operation-categories" class="category-chips"></div><div id="operation-grid" class="operation-grid"></div><div class="dialog-footer"><span id="operation-count"></span><span>Need more control? Try <button class="link-button" data-action="add-custom">Custom R step</button>.</span></div></dialog>
+
+  <dialog id="source-dialog" class="app-dialog source-dialog" aria-labelledby="source-title"><div class="dialog-heading"><div><div class="eyebrow">START WITH A TABLE</div><h2 id="source-title">Choose your data</h2><p>Import several files together, inspect tables, or try related examples.</p></div><button class="btn btn-icon" data-close aria-label="Close data source picker"><span data-icon="x"></span></button></div><div class="dialog-tabs" role="tablist" aria-label="Data source kind"><button id="examples-tab" class="tab-button active" data-action="source-examples" role="tab" aria-selected="true">Example tables</button><button id="upload-tab" class="tab-button" data-action="source-upload" role="tab" aria-selected="false">Import files</button><button id="loaded-tab" class="tab-button" data-action="source-loaded" role="tab" aria-selected="false">Tables <span id="upload-count" class="count-badge">0</span> imports</button></div><div class="source-dialog-content"><div id="examples-view"><div id="dataset-grid" class="dataset-grid"></div></div><div id="upload-view" hidden><label id="file-drop" class="file-drop"><input id="data-file" type="file" multiple accept=".csv,.tsv,.txt,.tab,.fwf,.dat,.xlsx,.xls"><span data-icon="upload"></span><strong id="file-drop-title">Drop files here, or choose files</strong><span id="file-drop-detail">CSV, TSV, fixed-width, XLS or XLSX · up to 50 MiB per file</span></label><div id="pending-files" class="pending-files" aria-label="Files to import" hidden></div><div id="import-options" class="import-options" hidden><div class="form-grid"><label class="field">File type<select id="import-format"><option value="csv">Delimited text (CSV / TSV)</option><option value="fwf">Fixed-width text</option><option value="excel">Excel workbook</option></select></label><label class="field">Skip initial rows<input id="import-skip" type="number" min="0" value="0"></label><label id="delimiter-field" class="field">Delimiter<select id="import-separator"><option value="auto">Detect automatically</option><option value=",">Comma</option><option value="tab">Tab</option><option value=";">Semicolon</option><option value="|">Pipe</option></select></label><label id="encoding-field" class="field">Text encoding<select id="import-encoding"><option value="UTF-8">UTF-8</option><option value="Latin-1">Latin-1</option><option value="unknown">Detect / native</option></select></label><label id="widths-field" class="field span-two" hidden>Field widths<input id="import-widths" placeholder="6, 12, 3, 8"><small>Comma-separated integer widths. Negative widths skip fields.</small></label><label id="names-field" class="field span-two" hidden>Column names (optional)<input id="import-names" placeholder="employee_id, name, age, salary"></label><label id="sheet-field" class="field" hidden>Sheet name or number<input id="import-sheet" value="1" list="excel-sheets"><datalist id="excel-sheets"></datalist></label><label id="range-field" class="field" hidden>Cell range (optional)<input id="import-range" placeholder="A1:H200"></label><label id="na-field" class="field span-two">Missing value strings<input id="import-na" value="NA" placeholder="NA, N/A, NULL"><small>Comma-separated values; empty fields are also treated as missing.</small></label></div><label class="check-label"><input id="import-header" type="checkbox" checked> First row contains column names</label><label class="check-label"><input id="import-primary" type="checkbox" checked> Use the first imported file as the primary table</label><div class="import-action"><span id="import-feedback" role="status"></span><button id="import-button" class="btn btn-primary" data-action="import-file"><span data-icon="upload"></span>Import tables</button></div></div><div class="privacy-box"><span data-icon="shield"></span><span>Files are read locally by R and saved in this browser for refresh recovery. Restart app clears the saved workspace and file copies.</span></div></div><div id="loaded-view" hidden><div class="search-box"><span data-icon="search"></span><input id="loaded-table-search" type="search" placeholder="Search filenames, table names, or columns…" aria-label="Search imported tables"></div><div id="loaded-tables"></div></div></div><div class="dialog-footer"><label class="check-label"><input id="clear-on-source" type="checkbox" checked> Start with an empty pipeline when switching tables</label></div></dialog>
+
+  <dialog id="helpers-dialog" class="app-dialog helpers-dialog" aria-labelledby="helpers-title"><div class="dialog-heading"><div><div class="eyebrow">A LITTLE R AT YOUR FINGERTIPS</div><h2 id="helpers-title">Function reference</h2><p>Search helpers and examples. Copy a snippet into any expression.</p></div><button class="btn btn-icon" data-close aria-label="Close function reference"><span data-icon="x"></span></button></div><div class="search-box"><span data-icon="search"></span><input id="helper-search" type="search" placeholder="Try shift, .SD, fcase, rolling…" aria-label="Search function reference"></div><div id="helper-list" class="helper-list"></div><div class="dialog-footer"><span id="helper-count"></span><a href="https://rdatatable.gitlab.io/data.table/reference/index.html" target="_blank" rel="noopener noreferrer">data.table documentation <span data-icon="arrow-up-right"></span></a></div></dialog>
+
+  <dialog id="help-dialog" class="app-dialog help-dialog" aria-labelledby="help-title"><div class="dialog-heading"><div><div class="eyebrow">MAKE YOURSELF AT HOME</div><h2 id="help-title">Your pipeline, step by step</h2></div><button class="btn btn-icon" data-close aria-label="Close guide"><span data-icon="x"></span></button></div><div class="help-content"><div class="guide-step"><span>1</span><div><h3>Choose a table</h3><p>Choose multiple CSV, TSV, fixed-width or Excel files in one selection. Each gets a file-based R name and an import statement. Search, preview, delete, and insert table names from Available tables or Manage. Related examples are chosen automatically for joins.</p></div></div><div class="guide-step"><span>2</span><div><h3>Build your chain</h3><p>Use <strong>Add a step</strong>, then fill in its settings. Column chips insert names. Move, duplicate or disable steps from the pipeline. Click the eye on a step to preview the result up to that point.</p></div></div><div class="guide-step"><span>3</span><div><h3>Make the code your own</h3><p>The editor is real R. Typing switches to Text mode. <strong>Sync to Visual</strong> parses your edits into guided or custom R steps and preserves arbitrary scripts. Code hints propose table names, columns, and functions; turn them off above the editor. Press F1 for function help. Use Format R to hard-wrap text with nested indentation. Comments: on/off controls comments in the editor and R output while preserving hashes inside strings.</p></div></div><div class="guide-step"><span>4</span><div><h3>Keep work moving</h3><p>Turn off Live preview for slower transformations; syntax checks continue. Preview pages show a bounded slice of the full result. Export CSV downloads the full table. Stop restarts the R worker when a calculation takes too long.</p></div></div><div class="help-grid"><div><h3>Keyboard shortcuts</h3><dl><dt>Ctrl + Enter</dt><dd>Run current code</dd><dt>Ctrl + Space</dt><dd>Complete tables, columns, or R functions</dd><dt>F1</dt><dd>Function documentation at the cursor</dd><dt>A</dt><dd>Add a step (outside fields)</dd><dt>Ctrl + Z</dt><dd>Undo in the focused editor or builder</dd><dt>Esc</dt><dd>Close an open dialog</dd></dl></div><div><h3>Saving your work</h3><p>Your workspace and successfully imported files are saved in this browser for refresh recovery. Save recipe also downloads a portable JSON copy without file contents. Restart R keeps your work; Restart app asks for confirmation before clearing the saved workspace and file copies. Download the R script to run the transformation in desktop R.</p><h3>Local execution</h3><p>The first launch downloads webR and R packages. Computation runs locally; imported file copies and recovery state stay in this browser. Browser memory limits apply. Custom R may make network requests if you explicitly write them.</p></div></div><p class="help-runtime" id="runtime-versions">Runtime: webR 0.6.0 · Bootstrap 6 alpha · CodeMirror 5</p></div></dialog>
+
+  <dialog id="table-preview-dialog" class="app-dialog table-preview-dialog" aria-labelledby="table-preview-title"><div class="dialog-heading"><div><div class="eyebrow">TABLE INSPECTOR</div><h2 id="table-preview-title">Table preview</h2><p id="table-preview-meta"></p></div><button class="btn btn-icon" data-close aria-label="Close table preview"><span data-icon="x"></span></button></div><div id="table-preview-content" class="table-container"></div><div class="dialog-footer"><span>First 100 rows. The pipeline result is preserved.</span><button class="btn btn-secondary btn-sm" data-action="analysis">Explore statistics and charts</button></div></dialog>
+  <dialog id="function-help-dialog" class="app-dialog function-help-dialog" aria-labelledby="function-help-title"><div class="dialog-heading"><div><div class="eyebrow">R FUNCTION HELP</div><h2 id="function-help-title">Function help</h2><p id="function-help-signature"></p></div><button class="btn btn-icon" data-close aria-label="Close function help"><span data-icon="x"></span></button></div><pre id="function-help-text"></pre><div class="dialog-footer"><a id="function-help-link" target="_blank" rel="noopener noreferrer">Open documentation ↗</a><span>F1 opens help for the function at your cursor.</span></div></dialog>
+  <dialog id="restart-app-dialog" class="app-dialog restart-app-dialog" aria-labelledby="restart-app-title" aria-describedby="restart-app-description"><div class="dialog-heading"><div><div class="eyebrow">START OVER</div><h2 id="restart-app-title">Restart the app?</h2></div><button class="btn btn-icon" data-close aria-label="Cancel restart"><span data-icon="x"></span></button></div><div class="restart-app-content"><p id="restart-app-description">This clears the saved pipeline, R code, imported tables and file copies, undo history, analysis settings, and preferences for this workspace in this browser.</p><p>The app will reopen with its initial example pipeline.</p></div><div class="dialog-footer"><button class="btn btn-secondary" data-close autofocus>Cancel</button><button id="confirm-restart-app" class="btn btn-danger" data-action="confirm-restart-app">Clear everything and restart</button></div></dialog>
+  <div id="field-hints" class="field-hints" role="listbox" aria-label="Name suggestions" hidden></div>
+
+  <div id="toast-container" class="toast-container" role="status" aria-live="polite"></div>
+  <input id="recipe-file" type="file" accept=".json" hidden>
+  <noscript><div class="noscript">Tablecraft needs JavaScript to load R and build transformations. Enable JavaScript, then reload this page.</div></noscript>
+</body>
+</html>

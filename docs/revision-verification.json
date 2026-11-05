@@ -1,0 +1,293 @@
+{
+  "schemaVersion": 1,
+  "release": "2.1.0",
+  "verifiedOn": "2026-11-05",
+  "status": "all_executed_checks_passed",
+  "scope": "Fresh 2.1 revision verification. Earlier core-runtime and full analysis evidence is separately identified and was not rerun in full.",
+  "freshChecks": [
+    {
+      "id": "javascript-unit",
+      "command": "node --test tests/*.test.mjs",
+      "passed": 92,
+      "total": 92
+    },
+    {
+      "id": "static-project",
+      "command": "node tests/check-project.mjs",
+      "passed": 4,
+      "total": 4
+    },
+    {
+      "id": "storage-integration",
+      "command": "npm run test:storage",
+      "passed": 13,
+      "total": 13,
+      "environment": "WorkspaceStore with fake-indexeddb and controlled localStorage"
+    },
+    {
+      "id": "dom-integration",
+      "command": "npm run test:ui",
+      "passed": 36,
+      "total": 36,
+      "failed": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "durationMs": 14420.490298,
+      "environment": "Actual HTML, app.js and vendored CodeMirror under jsdom; controlled REngine double"
+    },
+    {
+      "id": "parser-supported",
+      "command": "node tests/parser.webr.mjs",
+      "passed": 86,
+      "total": 86,
+      "operationTypes": 53,
+      "checks": [
+        "Original R parse tree retained",
+        "Rebuilt visual fields preserve values, keys and secondary indexes"
+      ]
+    },
+    {
+      "id": "parser-unsupported",
+      "command": "node tests/parser.webr.mjs",
+      "passed": 34,
+      "total": 34,
+      "checks": [
+        "Exact fallback retains the original R parse tree"
+      ]
+    },
+    {
+      "id": "parser-qualified-functions",
+      "command": "node tests/parser.webr.mjs",
+      "passed": 3,
+      "total": 3,
+      "functions": [
+        "data.table::setorderv",
+        "data.table::melt",
+        "data.table::shift"
+      ],
+      "checks": [
+        "Namespace survives rebuilding when an unqualified function name is masked"
+      ]
+    },
+    {
+      "id": "catalogue-roundtrips",
+      "command": "node tests/compiler.webr.mjs",
+      "passed": 129,
+      "total": 129,
+      "extraScriptsPassed": 5,
+      "quotedIdentifiersPassed": 10
+    },
+    {
+      "id": "generated-r-behavior",
+      "artifact": "tests/operations.integration.R",
+      "regenerateCommand": "node tests/generate-operations.mjs",
+      "reproductionHarness": "node tests/runtime.integration.mjs",
+      "passed": 201,
+      "total": 201,
+      "assertionCases": 108,
+      "note": "Regenerated behavior cases were rerun separately in actual R. This does not claim a new full run of the 23 core production-runtime groups. Individual outcomes in runtime-verification.json remain historical."
+    },
+    {
+      "id": "comments-real-r",
+      "command": "node tests/comments.webr.mjs",
+      "passed": 19,
+      "total": 19,
+      "checks": [
+        "Lexical filtering preserves parse trees",
+        "Safe pipe insertion",
+        "Edited/wrapped code with restored comments"
+      ],
+      "lineEndings": "LF uses parse(text); CRLF/CR fixtures use R file-input handling"
+    },
+    {
+      "id": "runtime-features",
+      "command": "node tests/runtime-features.integration.mjs",
+      "passed": 9,
+      "total": 9,
+      "report": "reports.runtimeFeatures"
+    },
+    {
+      "id": "installed-help-pages",
+      "command": "node tests/help.webr.mjs",
+      "passed": 2,
+      "total": 2,
+      "report": "reports.help"
+    }
+  ],
+  "reports": {
+    "runtimeFeatures": {
+      "verifiedAt": "2026-11-05T16:57:26.352Z",
+      "runtime": "Production REngine in Node webR",
+      "packageDelivery": "Compatible Wasm packages mounted locally",
+      "versions": {
+        "webR": "0.6.0",
+        "R": "4.6.0",
+        "data.table": "1.18.6.1",
+        "magrittr": "2.0.5",
+        "jsonlite": "2.0.0",
+        "bit64": "4.8.6",
+        "readxl": "1.5.0.1"
+      },
+      "groups": 9,
+      "report": [
+        {
+          "name": "file-based non-syntactic and Unicode names, safe backticks, and deterministic collisions",
+          "passed": true
+        },
+        {
+          "name": "R AST detects package calls while ignoring comments, strings, quotes, and dynamic names",
+          "passed": true
+        },
+        {
+          "name": "automatic package-install request, dynamic library loading, and recoverable install diagnostics",
+          "passed": true
+        },
+        {
+          "name": "imported, built-in, and last-run object previews preserve the pipeline result",
+          "passed": true
+        },
+        {
+          "name": "analysis captures console and warnings with data.table mutation and error isolation",
+          "passed": true
+        },
+        {
+          "name": "runs, previews, and analyses use one serialized execution queue",
+          "passed": true
+        },
+        {
+          "name": "completions combine user objects and loaded exports; package help is read from R documentation",
+          "passed": true
+        },
+        {
+          "name": "example table deletion removes session bindings and completions while preserving results and uploads",
+          "passed": true
+        },
+        {
+          "name": "deletion removes the correct symbol and file and survives runtime restart",
+          "passed": true
+        }
+      ]
+    },
+    "help": {
+      "verifiedAt": "2026-11-05T16:34:17.698Z",
+      "runtime": "Production REngine in Node webR",
+      "packageDelivery": "Compatible Wasm packages mounted locally",
+      "versions": {
+        "webR": "0.6.0",
+        "R": "4.6.0",
+        "data.table": "1.18.6.1",
+        "magrittr": "2.0.5",
+        "jsonlite": "2.0.0",
+        "bit64": "4.8.6",
+        "readxl": "1.5.0.1"
+      },
+      "pages": [
+        {
+          "topic": "setorderv",
+          "package": "data.table",
+          "characters": 7019,
+          "rawTextClean": true,
+          "legacyTextRecovered": true
+        },
+        {
+          "topic": "fread",
+          "package": "data.table",
+          "characters": 27973,
+          "rawTextClean": true,
+          "legacyTextRecovered": true
+        }
+      ],
+      "formattingOptionsUnchanged": true,
+      "pipelineResultUnchanged": true,
+      "missingTopicIsNull": true
+    }
+  },
+  "carriedForward": {
+    "release": "2.0.0",
+    "verifiedOn": "2026-11-05",
+    "unchangedReport": "runtime-verification.json",
+    "unchangedReportSha256": "329e48854325d97bce6f8a39ab9a5493596fbd86df1206704ab371461f5b7748",
+    "checks": [
+      {
+        "id": "core-production-runtime",
+        "passed": 23,
+        "total": 23,
+        "rerunInThisRevision": false,
+        "evidence": "runtime-verification.json runtimeGroups and report"
+      },
+      {
+        "id": "full-r-analysis",
+        "passed": 48,
+        "total": 48,
+        "rerunInThisRevision": false,
+        "evidence": "Prior 2.0 verification summary retained in verification.md under Carried-forward 2.0 evidence",
+        "chartTypes": 8,
+        "fullDataCheckRows": 10001
+      },
+      {
+        "id": "builtin-dataset-dimensions",
+        "passed": 12,
+        "total": 12,
+        "rerunInThisRevision": false,
+        "evidence": "Earlier core production-runtime suite"
+      }
+    ],
+    "historicalReportNote": "The unchanged baseline JSON also retains eight earlier feature groups and 201 earlier operation outcomes; fresh reports do not rewrite those entries."
+  },
+  "environment": {
+    "node": "24.22.1",
+    "webR": "0.6.0",
+    "R": "4.6.0",
+    "data.table": "1.18.6.1",
+    "magrittr": "2.0.5",
+    "jsonlite": "2.0.0",
+    "bit64": "4.8.6",
+    "readxl": "1.5.0.1",
+    "CodeMirror": "5.65.21",
+    "jsdom": "27.0.1",
+    "fake-indexeddb": "6.2.5",
+    "channel": "webR PostMessage under Node",
+    "packageDelivery": "Compatible Wasm R packages mounted locally because the Node downloader could not use the environment network proxy"
+  },
+  "browserAcceptance": {
+    "status": "not_run",
+    "reason": "Managed browser preview service unavailable",
+    "unverified": [
+      "Layout and responsive breakpoints",
+      "Real pointer/focus behavior",
+      "Browser image-bitmap transfer and chart canvas appearance",
+      "First-time remote CDN/R-package download",
+      "Native browser storage quota, eviction and durability behavior"
+    ]
+  },
+  "limitations": [
+    "Check types overlap; counts must not be summed as distinct application features.",
+    "DOM tests use jsdom and a controlled R-engine double; storage tests use fake-indexeddb and controlled localStorage.",
+    "Package tests cover discovery, installation requests, compatible local execution and errors, not first-time browser downloads.",
+    "No deployment, cross-browser certification, performance benchmark or practical dataset-size guarantee was performed.",
+    "The full 48-case analysis and 23-group core-runtime suites were carried forward, not rerun in full."
+  ],
+  "reproduction": {
+    "javascript": "npm test",
+    "dom": "npm run test:ui",
+    "storage": "npm run test:storage",
+    "compiler": "node tests/compiler.webr.mjs",
+    "comments": "node tests/comments.webr.mjs",
+    "parser": "node tests/parser.webr.mjs",
+    "help": "node tests/help.webr.mjs",
+    "runtimeFeatures": "node tests/runtime-features.integration.mjs",
+    "regenerateBehavior": "node tests/generate-operations.mjs",
+    "fullRuntimeAndBehavior": "node tests/runtime.integration.mjs",
+    "fullAnalysis": "node tests/analysis.webr.mjs",
+    "prerequisites": [
+      "npm install for DOM/storage development dependencies",
+      "npm install --no-save webr@0.6.0 for actual R tests",
+      "TABLECRAFT_R_LIBRARY can point to compatible unpacked Wasm packages; parser.webr.mjs expects data.table and magrittr in its webR library"
+    ],
+    "reportVariables": [
+      "TABLECRAFT_HELP_REPORT",
+      "TABLECRAFT_FEATURE_REPORT",
+      "TABLECRAFT_REPORT"
+    ]
+  }
+}

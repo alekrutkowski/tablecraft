@@ -1,0 +1,23 @@
+{
+  "sales.csv": {
+    "rows": 8,
+    "columns": 7,
+    "totalUnits": 26,
+    "totalRevenue": 323,
+    "revenueByRegion": {"East": 116.5, "North": 109.5, "South": 61, "West": 36}
+  },
+  "products.csv": {"rows": 3, "columns": 3},
+  "sensors.tsv": {"rows": 6, "columns": 3, "missingTemperature": 2},
+  "staff.fwf": {
+    "rows": 4,
+    "columns": 4,
+    "widths": [6, 12, 3, 8],
+    "names": ["employee_id", "name", "age", "salary"],
+    "totalSalary": 244000
+  },
+  "workbook.xlsx": {
+    "sheets": ["Sales", "Products"],
+    "Sales": {"rows": 8, "columns": 7},
+    "Products": {"rows": 3, "columns": 3}
+  }
+}
