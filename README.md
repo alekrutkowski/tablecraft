@@ -4,11 +4,16 @@
 <img src="https://raw.githubusercontent.com/Rdatatable/data.table/master/.graphics/logo.png" width=40> &nbsp;
 <img src="https://magrittr.tidyverse.org/logo.png" width=42>
 
-A visual workbench for building real [R](https://www.r-project.org/about.html) [**data.table**](https://CRAN.R-project.org/package=data.table) pipelines in your browser. Add and configure transformation steps, inspect the generated [**magrittr**](https://CRAN.R-project.org/package=magrittr) `%>%`** chain, edit the R directly, and see the resulting table through [**webR**](https://docs.r-wasm.org/).
+A visual workbench for building real [R](https://www.r-project.org/about.html) [**data.table**](https://CRAN.R-project.org/package=data.table) pipelines in your browser. Add and configure transformation steps, inspect the generated [**magrittr**](https://CRAN.R-project.org/package=magrittr) [`%>%`](https://magrittr.tidyverse.org/reference/pipe.html) chain, edit the R directly, and see the resulting table through [**webR**](https://docs.r-wasm.org/).
 
 Tablecraft is a static HTML, CSS, JavaScript, and WebAssembly/webR application. It needs no application server, database, R installation, package manager, or build step. It can be served from GitHub Pages, including a project subdirectory.
 
-### You can use it at https://alekrutkowski.github.io/tablecraft
+### You can use it at https://alekrutkowski.github.io/tablecraft <br><br>
+
+<img width="3840" height="2400" alt="image" src="https://github.com/user-attachments/assets/87377a0a-64d7-4837-8082-5ccdfd361380" />
+
+<img width="3840" height="2400" alt="image" src="https://github.com/user-attachments/assets/4afaeeee-3643-4eee-ab64-7b8376b52248" />
+
 
 ## What you can do
 
