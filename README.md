@@ -1,6 +1,6 @@
 # Tablecraft
 
-<img src="https://www.r-project.org/logo/Rlogo.svg" width="58"> &nbsp;
+<img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/R_logo.svg" width="58"> &nbsp;
 <img src="https://raw.githubusercontent.com/Rdatatable/data.table/master/.graphics/logo.png" width=40> &nbsp;
 <img src="https://magrittr.tidyverse.org/logo.png" width=42>
 
